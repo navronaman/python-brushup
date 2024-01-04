@@ -96,11 +96,31 @@ class Playlist:
     
     def get_playlist_url(self):
         return self.playlist_url
-
+    
+    def get_songs_array(self):
         
+        tmp = []
         
-
-
+        print(type(self.playlist_json["tracks"]["items"]))
+        
+                    
+        for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+            for k, c in self.playlist_json["tracks"]["items"][index].items():
+                if k == "track":
+                    for i, j in self.playlist_json["tracks"]["items"][index][k].items():
+                        if i == "name":
+                            tmp.append(j)
+                            continue
+                    
+        return tmp
+    
+    def print_songs(self):
+        
+        song_list = self.get_songs_array()
+        for index, song in enumerate(song_list):
+            print(f"\n {index+1}. {song}")
+                    
+        
 # For the get playlist code, we need better OAuth code, let's work with a search query
 def get_user_playlist(limit=50, offset=10):
     url = f"https://api.spotify.com/v1/me/playlists"
@@ -131,7 +151,7 @@ if __name__ == "__main__":
     
     playlist1 = Playlist(playlist_id="5KGUSMWkfWedc067zW7BYM")
     print(playlist1.get_playlist_name())
-    
+    playlist1.print_songs()    
     
 
 
