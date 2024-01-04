@@ -102,7 +102,6 @@ class Playlist:
         tmp = []
         
         print(type(self.playlist_json["tracks"]["items"]))
-        
                     
         for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
             for k, c in self.playlist_json["tracks"]["items"][index].items():
@@ -119,8 +118,57 @@ class Playlist:
         song_list = self.get_songs_array()
         for index, song in enumerate(song_list):
             print(f"\n {index+1}. {song}")
-                    
+                        
+    def most_featured_artist(self):
+                
+        tmp = []
         
+        for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+            for k, c in self.playlist_json["tracks"]["items"][index].items():
+                if k == "track":
+                    for ai, artist in enumerate(self.playlist_json["tracks"]["items"][index][k]["artists"]):
+                        for i, j in self.playlist_json["tracks"]["items"][index][k]["artists"][ai].items():
+                            if i == "name":
+                                tmp.append(j)
+                                continue
+                            
+        mfartist = tmp[0]
+        max_occ = 0
+        
+        for artist in tmp:
+            occurences = tmp.count(artist)
+            if occurences > max_occ:
+                max_occ = occurences
+                mfartist = artist
+                
+        return mfartist, max_occ
+    
+    def most_featured_album(self):
+        
+        tmp = []
+        
+        for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+            for k, c in self.playlist_json["tracks"]["items"][index].items():
+                if k == "track":
+                    for album_key, album_v in enumerate(self.playlist_json["tracks"]["items"][index][k]["album"]):
+                        for i, j in self.playlist_json["tracks"]["items"][index][k]["artists"][ai].items():
+                            if i == "name":
+                                tmp.append(j)
+                                continue
+                            
+        mfartist = tmp[0]
+        max_occ = 0
+        
+        for artist in tmp:
+            occurences = tmp.count(artist)
+            if occurences > max_occ:
+                max_occ = occurences
+                mfartist = artist
+                
+        return mfartist, max_occ
+    
+        
+                    
 # For the get playlist code, we need better OAuth code, let's work with a search query
 def get_user_playlist(limit=50, offset=10):
     url = f"https://api.spotify.com/v1/me/playlists"
@@ -148,10 +196,15 @@ if __name__ == "__main__":
     print(json3["tracks"]["items"][0]["name"])
     print(json3["tracks"]["items"][0]["artists"][0]["name"])
     
+    print("\n")
     
     playlist1 = Playlist(playlist_id="5KGUSMWkfWedc067zW7BYM")
     print(playlist1.get_playlist_name())
     playlist1.print_songs()    
+
+    print("\n")
+    
+    print(playlist1.most_featured_artist())
     
 
 
