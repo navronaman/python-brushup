@@ -24,3 +24,21 @@ print(type(item1))
 print(type(item1.name))
 print(type(item1.price))
 print(type(item1.quantity))
+
+import re
+
+def is_base62(s):
+    # Define the base62 character set
+    base62_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    
+    # Check if the string contains only valid base62 characters
+    return bool(re.match(f'^[{base62_chars}]+$', s))
+
+# Example usage:
+test_string = "6rqhFgbbKwnb9MLmUQDhG6"
+result = is_base62(test_string)
+
+if result:
+    print(f"{test_string} is a valid base62 string.")
+else:
+    print(f"{test_string} is not a valid base62 string.")

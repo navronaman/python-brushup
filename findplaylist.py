@@ -37,34 +37,40 @@ def get_auth_header_cc():
         "Authorization" : "Bearer " + token
     }
     
-    
-PLAYLIST_ID = "5KGUSMWkfWedc067zW7BYM"
-GET_PLAYLIST_URL = f"https://api.spotify.com/v1/playlists/{PLAYLIST_ID}"
+class Song:
+    def __init__(self, query_word):
+        self.query = query_word
+        self.track_item = self.get_song_from_search_json()
+        
+        
+    def get_song_from_search_json(self):
+        url = "https://api.spotify.com/v1/search"
+        headers = get_auth_header_cc()
+        
+        updated_song = ""
+        for char in self.query:
+            if char == " ":
+                updated_song += "+"
+            else:
+                updated_song += char
 
+                    
+        query = f"?q={updated_song}&type=track&market=US&limit=1&offset=0"
+        
+        query_url = url + query
+            
+        result = requests.get(url=query_url, headers=headers)
+        
+        json_result = json.loads(result.content)
+        
+        track_item_json = json_result["tracks"]["items"][0]
+        
+        return track_item_json
+    
+    
+    
 
 # Let's get a song from a search query
-def get_song_from_search(song):
-    url = "https://api.spotify.com/v1/search"
-    headers = get_auth_header_cc()
-    
-    updated_song = ""
-    for char in song:
-        if char == " ":
-            updated_song += "+"
-        else:
-            updated_song += char
-
-                
-    query = f"?q={updated_song}&type=track&market=US&limit=1&offset=0"
-    
-    query_url = url + query
-        
-    result = requests.get(url=query_url, headers=headers)
-    
-    json_result = json.loads(result.content)
-    
-    return json_result
-    
 class Playlist:
     def __init__(self, playlist_id, market="US"):
         self.playlist_id = playlist_id
@@ -150,22 +156,21 @@ class Playlist:
         for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
             for k, c in self.playlist_json["tracks"]["items"][index].items():
                 if k == "track":
-                    for album_key, album_v in enumerate(self.playlist_json["tracks"]["items"][index][k]["album"]):
-                        for i, j in self.playlist_json["tracks"]["items"][index][k]["artists"][ai].items():
-                            if i == "name":
-                                tmp.append(j)
-                                continue
+                    for album_key, album_v in self.playlist_json["tracks"]["items"][index][k]["album"].items():
+                        if album_key == "name" and album_v != "":
+                            tmp.append(album_v)
+                            continue
                             
-        mfartist = tmp[0]
+        mfalbum = tmp[0]
         max_occ = 0
         
-        for artist in tmp:
-            occurences = tmp.count(artist)
+        for album in tmp:
+            occurences = tmp.count(album)
             if occurences > max_occ:
                 max_occ = occurences
-                mfartist = artist
+                mfalbum = album
                 
-        return mfartist, max_occ
+        return mfalbum, max_occ
     
         
                     
@@ -186,15 +191,6 @@ def get_user_playlist(limit=50, offset=10):
 
 
 if __name__ == "__main__":
-
-    json2 = get_user_playlist()
-    print(json2)
-    
-    song_name = "Take that money watch it burn sing in"
-    
-    json3 = get_song_from_search(song_name)
-    print(json3["tracks"]["items"][0]["name"])
-    print(json3["tracks"]["items"][0]["artists"][0]["name"])
     
     print("\n")
     
@@ -205,6 +201,6 @@ if __name__ == "__main__":
     print("\n")
     
     print(playlist1.most_featured_artist())
-    
+    print(playlist1.most_featured_album())
 
 
