@@ -88,9 +88,6 @@ class Song:
             return artists
             
             
-    
-    
-    
 
 # Let's get a song from a search query
 class Playlist:
@@ -120,7 +117,7 @@ class Playlist:
         return self.playlist_name
     
     def get_playlist_ownder(self):
-        return self.playlist_name
+        return self.playlist_owner
     
     def get_playlist_url(self):
         return self.playlist_url
@@ -128,9 +125,7 @@ class Playlist:
     def get_songs_array(self):
         
         tmp = []
-        
-        print(type(self.playlist_json["tracks"]["items"]))
-                    
+                            
         for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
             for k, c in self.playlist_json["tracks"]["items"][index].items():
                 if k == "track":
@@ -138,7 +133,19 @@ class Playlist:
                         if i == "name":
                             tmp.append(j)
                             continue
-                    
+                        
+    def get_songs_id_array(self):
+        
+        tmp = []
+                            
+        for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+            for k, c in self.playlist_json["tracks"]["items"][index].items():
+                if k == "track":
+                    for i, j in self.playlist_json["tracks"]["items"][index][k].items():
+                        if i == "id":
+                            tmp.append(j)
+                            continue
+
         return tmp
     
     def print_songs(self):
