@@ -41,7 +41,14 @@ class Song:
     def __init__(self, query_word):
         self.query = query_word
         self.track_item = self.get_song_from_search_json()
+        self.track_name = self.track_item["name"]
+        self.track_album = self.track_item["album"]["name"]
         
+    def get_name(self):
+        return self.track_name
+    
+    def get_id(self):
+        return self.track_item["id"]        
         
     def get_song_from_search_json(self):
         url = "https://api.spotify.com/v1/search"
@@ -66,6 +73,21 @@ class Song:
         track_item_json = json_result["tracks"]["items"][0]
         
         return track_item_json
+    
+    def get_artists(self):
+        artists = []
+        for index, value in enumerate(self.track_item["artists"]):
+            for k, c in self.track_item["artists"][index].items():
+                if k == "name":
+                    artists.append(c)
+                    continue
+                
+        if len(artists) == 1:
+            return artists[0]
+        else:
+            return artists
+            
+            
     
     
     
@@ -172,7 +194,21 @@ class Playlist:
                 
         return mfalbum, max_occ
     
+    def is_song_in_playlist(self, song):
+        song_to_check = Song(song)
+        id_to_check = song_to_check.get_id()
         
+        b = False
+        
+        for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+            for k, c in self.playlist_json["tracks"]["items"][index].items():
+                if k == "track":
+                    if self.playlist_json["tracks"]["items"][index][k]["id"] == id_to_check:
+                        b = True
+                        break
+                    
+        return b
+    
                     
 # For the get playlist code, we need better OAuth code, let's work with a search query
 def get_user_playlist(limit=50, offset=10):
@@ -202,5 +238,17 @@ if __name__ == "__main__":
     
     print(playlist1.most_featured_artist())
     print(playlist1.most_featured_album())
+    
+    print(playlist1.is_song_in_playlist("Haan Main Galat"))
+    print(playlist1.is_song_in_playlist("Haule Haule"))
+    
+    print("\n")
+
+    
+    song1 = Song(query_word="my darkest hours girl i felt so alone")
+    print(song1.get_name())
+    print(song1.get_artists())
+    print(song1.get_id())
+    
 
 
