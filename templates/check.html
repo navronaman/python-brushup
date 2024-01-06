@@ -24,8 +24,9 @@
             <!-- this is for message in the second thing -->
 
             {% for message in get_flashed_messages(with_categories=true)%}
-                {% of message[0] == "song_check" %}
+                {% if message[0] == "song_check" %}
                 <p>{{message[1]}}</p>
+                {% endif %}
             {% endfor %}
             
         </form>

@@ -39,7 +39,7 @@ def check():
     
     flash(song_check, "song_check")
     
-    return render_template(check.html)
+    return render_template("check.html")
     
 
 if __name__ == "__main__":

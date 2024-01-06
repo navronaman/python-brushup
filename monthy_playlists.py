@@ -29,7 +29,7 @@ def what_playlist_what_song(song_id_to_find, spotify_playlists=SPOTIFY_PLAYLISTS
         for song in song_ids:
             if song == song_id_to_find:
                 print("I'm here!")
-                word = word + f"Song found in {playlist.get_playlist_name()}"
+                word = f"Song found in {playlist.get_playlist_name()}"
                 break
             
     return word
