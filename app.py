@@ -10,11 +10,6 @@ app.secret_key = secrets.token_hex(16)
 MONTHLY_PLAYLISTS = create_monthly_array()
 
 @app.route("/")
-
-def trial():
-    return "Hello World"
-
-@app.route("/index")
 def index():
     
     flash(message="What song buddy?")
@@ -36,14 +31,10 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     Song Name: {song_name} \t
     \n Song Artists: {song_artists}
     """
-    
-    flash(message=message1)
-    
-    song_check = what_playlist_what_song(song_id)
-    
-    flash(song_check, "song_check")
-    
-    return render_template("check.html", song_image_url=song_image_url, song_link_url=song_link_url)
+        
+    song_check, play_url = what_playlist_what_song(song_id)
+        
+    return render_template("check.html", message1 = message1, message2 = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url = play_url)
     
 
 if __name__ == "__main__":

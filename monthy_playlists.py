@@ -22,17 +22,30 @@ SPOTIFY_PLAYLISTS = create_monthly_array()
                     
 def what_playlist_what_song(song_id_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
     
-    word = "Song not found"
+    booboo = False
+    word = ""
+    url = ""
         
     for playlist in spotify_playlists:
         song_ids = playlist.get_songs_id_array()
         for song in song_ids:
             if song == song_id_to_find:
-                print("I'm here!")
-                word = f"Song found in {playlist.get_playlist_name()}"
+                booboo = True
+                playlist_extreme = playlist
+                word = f"""Song found in {playlist.get_playlist_name()}
+                \n \t 
+                """
                 break
             
-    return word
+    if booboo:
+        word = f"Song found in {playlist_extreme.get_playlist_name()}"
+        url = f"{playlist_extreme.get_playlist_url()}"
+        
+    else:
+        word = "Song not found in any of your playlists"
+        url = "https://youtu.be/dQw4w9WgXcQ?si=IGFC0ZxLDrACyJxg"
+            
+    return word, url
     
 
 if __name__ == "__main__":
@@ -46,7 +59,9 @@ if __name__ == "__main__":
     print(f"Song Name: {song_to_find.get_name()}")
     print(f"Song Artist(s): {song_to_find.get_artists()}")
     
-    print(what_playlist_what_song(song_id_to_find=song_id_to_find))
+    word, url = what_playlist_what_song(song_id_to_find=song_id_to_find)
+    print(word)
+    print(url)
     
     end_time = time.time()
     elapsed_time = end_time - start_time

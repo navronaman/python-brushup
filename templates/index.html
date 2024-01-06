@@ -13,11 +13,6 @@
         </p>
         <br>
         <form action = "check" method = "post">
-            {% for message in get_flashed_messages() %}
-                <p>{{message}}</p>
-            {% endfor  %}
-            <p> What song? </p>
-            <br>
             <input type = "text" name = "song_input">
             <br>
             <input type = "submit" value = "CHECK" id = "check">
