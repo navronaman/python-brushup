@@ -29,24 +29,22 @@ for playlist in SPOTIFY_PLAYLISTS:
             if song == song_id_to_find:
                 print(f"Song found in {playlist.get_playlist_name()}")
                 break
-            
-print(song_id_to_find)
-        
+                    
 def what_playlist_what_song(song_id_to_find):
     
-    str = ""
+    word = ""
         
     for playlist in SPOTIFY_PLAYLISTS:
         song_ids = playlist.get_songs_id_array()
         for song in song_ids:
             if song == song_id_to_find:
                 print("I'm here!")
-                str = str + f"Song found in {playlist.get_playlist_name()}"
+                word = word + f"Song found in {playlist.get_playlist_name()}"
                 break
             
-    return str
+    return word
     
-print(what_playlist_what_song("Superman"))
+print(what_playlist_what_song(song_id_to_find=song_id_to_find))
     
     
 
