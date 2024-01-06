@@ -92,6 +92,21 @@ class Song:
         image_url = self.track_item["album"]["images"][0]["url"]
         
         return image_url
+    
+    def get_song_url(self):
+        
+        try:
+            song_url = self.track_item["external_urls"]["spotify"]
+        
+        except KeyError:
+            
+            try:         
+                song_url = self.track_item["album"]["external_urls"]["spotify"]
+                
+            except KeyError:
+                song_url = "https://youtu.be/dQw4w9WgXcQ?si=IGFC0ZxLDrACyJxg"
+        
+        return song_url
             
         
             

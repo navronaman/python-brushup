@@ -7,6 +7,8 @@ import secrets
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
+MONTHLY_PLAYLISTS = create_monthly_array()
+
 @app.route("/")
 
 def trial():
@@ -20,15 +22,15 @@ def index():
     return render_template("index.html")
 
 @app.route("/check", methods=["POST", "GET"])
-def check():
+def check(monthly_playlists = MONTHLY_PLAYLISTS):
     song_name = str(request.form["song_input"])
-    monthly_playlists = create_monthly_array()
     song_to_find = Song(song_name)
     song_id = song_to_find.get_id()
     
     song_name = song_to_find.get_name()
     song_artists = song_to_find.get_artists()
     song_image_url = song_to_find.get_image_url()
+    song_link_url = song_to_find.get_song_url()
     
     message1 = f"""
     Song Name: {song_name} \t
@@ -41,7 +43,7 @@ def check():
     
     flash(song_check, "song_check")
     
-    return render_template("check.html", song_image_url=song_image_url)
+    return render_template("check.html", song_image_url=song_image_url, song_link_url=song_link_url)
     
 
 if __name__ == "__main__":

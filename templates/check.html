@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Spotify App </title>
+        <link rel="stylesheet" href = "{{
+            url_for('static', filename='css/main.css')
+        }}">
     </head>
     <body>
         <p>
@@ -23,7 +26,9 @@
 
             <!--image from the song-->
             <p>
+                <a href="{{song_link_url}}" target="_blank">
                 <img src = "{{song_image_url}}" alt = "Song Image">
+                </a>
             </p>
 
             <!-- this is for message in the second thing -->
