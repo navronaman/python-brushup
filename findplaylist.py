@@ -86,6 +86,14 @@ class Song:
             return artists[0]
         else:
             return artists
+        
+    def get_image_url(self):
+        
+        image_url = self.track_item["album"]["images"][0]["url"]
+        
+        return image_url
+            
+        
             
             
 

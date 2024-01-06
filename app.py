@@ -25,12 +25,14 @@ def check():
     monthly_playlists = create_monthly_array()
     song_to_find = Song(song_name)
     song_id = song_to_find.get_id()
+    
     song_name = song_to_find.get_name()
     song_artists = song_to_find.get_artists()
+    song_image_url = song_to_find.get_image_url()
     
     message1 = f"""
-    Song Name: {song_name}
-    Song Artists: {song_artists}
+    Song Name: {song_name} \t
+    \n Song Artists: {song_artists}
     """
     
     flash(message=message1)
@@ -39,7 +41,7 @@ def check():
     
     flash(song_check, "song_check")
     
-    return render_template("check.html")
+    return render_template("check.html", song_image_url=song_image_url)
     
 
 if __name__ == "__main__":

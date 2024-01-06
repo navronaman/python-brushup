@@ -21,6 +21,11 @@
                 <p>{{message}}</p>
             {% endfor %}
 
+            <!--image from the song-->
+            <p>
+                <img src = "{{song_image_url}}" alt = "Song Image">
+            </p>
+
             <!-- this is for message in the second thing -->
 
             {% for message in get_flashed_messages(with_categories=true)%}
@@ -28,6 +33,8 @@
                 <p>{{message[1]}}</p>
                 {% endif %}
             {% endfor %}
+
+
             
         </form>
     </body>
