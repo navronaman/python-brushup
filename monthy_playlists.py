@@ -1,4 +1,5 @@
 import time
+start_time = time.time()
 import pandas as pd
 from findplaylist import Playlist, Song
 
@@ -46,8 +47,6 @@ def what_playlist_what_song(song_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
 
 if __name__ == "__main__":
     
-    start_time = time.time()
-
     song_q = input("Enter song name: ")
     song_to_find = Song(song_q)
     
@@ -58,6 +57,8 @@ if __name__ == "__main__":
     print(word)
     print(url)
     print(song_to_find.get_playback())
+    print(type(song_to_find.get_playback()))
+
     
     end_time = time.time()
     elapsed_time = end_time - start_time

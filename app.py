@@ -11,9 +11,7 @@ MONTHLY_PLAYLISTS = create_monthly_array()
 
 @app.route("/")
 def index():
-    
-    flash(message="What song buddy?")
-    
+        
     return render_template("index.html")
 
 @app.route("/check", methods=["POST", "GET"])
@@ -37,7 +35,9 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     song_link_url = song_to_find.get_song_url()
     
     message1 = f"""
-    Song Name: {song_name} \t
+    Song Name: {song_name}
+    """
+    message_new = f"""
     \n Song Artists: {song_artists}
     """
         
@@ -46,7 +46,7 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     audio_message = ""
     playback_link = song_to_find.get_playback()
     
-    if playback_link != "null" or playback_link != "None":
+    if playback_link != None:
         audio_message = f"""
         <audio src='{song_to_find.get_playback()}' controls loop preload = 'metadata'>
         
@@ -55,7 +55,7 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
         """    
     
         
-    return render_template("check.html", message1 = message1, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url, audio=audio_message)
+    return render_template("check.html", message1 = message1, message_new = message_new, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url, audio=audio_message)
     
 
 if __name__ == "__main__":
