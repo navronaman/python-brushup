@@ -20,7 +20,6 @@ def index():
 def check(monthly_playlists = MONTHLY_PLAYLISTS):
     song_name = str(request.form["song_input"])
     song_to_find = Song(song_name)
-    song_id = song_to_find.get_id()
     
     song_name = song_to_find.get_name()
     song_artists = song_to_find.get_artists()
@@ -32,10 +31,13 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     \n Song Artists: {song_artists}
     """
         
-    song_check, play_url = what_playlist_what_song(song_id)
+    song_check, play_url = what_playlist_what_song(song_to_find)
+    
+    print(song_check)
+    print(play_url)
         
-    return render_template("check.html", message1 = message1, message2 = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url = play_url)
+    return render_template("check.html", message1 = message1, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url)
     
 
 if __name__ == "__main__":
-    app.run(host="120.0.0.1", port=8080, debug=True)
+    app.run(host="120.0.0.1", port=0000, debug=True)
