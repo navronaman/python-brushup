@@ -20,30 +20,26 @@ def create_monthly_array(df=DF):
 SPOTIFY_PLAYLISTS = create_monthly_array()
     
                     
-def what_playlist_what_song(song_id_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
-    
+def what_playlist_what_song(song_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
+        
     booboo = False
     word = ""
     url = ""
         
     for playlist in spotify_playlists:
-        song_ids = playlist.get_songs_id_array()
-        for song in song_ids:
-            if song == song_id_to_find:
-                booboo = True
-                playlist_extreme = playlist
-                word = f"""Song found in {playlist.get_playlist_name()}
-                \n \t 
-                """
-                break
+        
+        if playlist.is_song_in_playlist(song_to_find):
+            playlist_extreme = playlist
+            booboo = True
+            break            
             
     if booboo:
-        word = f"Song found in {playlist_extreme.get_playlist_name()}"
+        word = f"Song is found in {playlist_extreme.get_playlist_name()}"
         url = f"{playlist_extreme.get_playlist_url()}"
         
     else:
         word = "Song not found in any of your playlists"
-        url = "https://youtu.be/dQw4w9WgXcQ?si=IGFC0ZxLDrACyJxg"
+        url = f"{song_to_find.get_song_url()}"
             
     return word, url
     
@@ -54,12 +50,11 @@ if __name__ == "__main__":
 
     song_q = input("Enter song name: ")
     song_to_find = Song(song_q)
-    song_id_to_find = song_to_find.get_id()
     
     print(f"Song Name: {song_to_find.get_name()}")
     print(f"Song Artist(s): {song_to_find.get_artists()}")
     
-    word, url = what_playlist_what_song(song_id_to_find=song_id_to_find)
+    word, url = what_playlist_what_song(song_to_find)
     print(word)
     print(url)
     
