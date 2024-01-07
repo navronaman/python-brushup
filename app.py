@@ -36,7 +36,7 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     print(song_check)
     print(play_url)
         
-    return render_template("check.html", message1 = message1, message2 = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url)
+    return render_template("check.html", message1 = message1, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url)
     
 
 if __name__ == "__main__":
