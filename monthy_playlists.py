@@ -38,7 +38,7 @@ def what_playlist_what_song(song_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
         url = f"{playlist_extreme.get_playlist_url()}"
         
     else:
-        word = "Song not found in any of your playlists"
+        word = f"Song is found in {song_to_find.get_album_name()}"
         url = f"{song_to_find.get_song_url()}"
             
     return word, url
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     word, url = what_playlist_what_song(song_to_find)
     print(word)
     print(url)
+    print(song_to_find.get_playback())
     
     end_time = time.time()
     elapsed_time = end_time - start_time

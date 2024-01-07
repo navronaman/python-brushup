@@ -22,7 +22,17 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
     song_to_find = Song(song_name)
     
     song_name = song_to_find.get_name()
-    song_artists = song_to_find.get_artists()
+    song_artists_list = song_to_find.get_artists()
+    song_artists = ""
+    
+    if len(song_artists_list) == 1:
+        song_artists = song_artists_list[0]
+    else:
+        for index, artist in enumerate(song_artists_list):
+            song_artists += artist
+            if index < len(song_artists_list) - 1:
+                song_artists += ", "
+    
     song_image_url = song_to_find.get_image_url()
     song_link_url = song_to_find.get_song_url()
     
@@ -33,10 +43,19 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
         
     song_check, play_url = what_playlist_what_song(song_to_find)
     
-    print(song_check)
-    print(play_url)
+    audio_message = ""
+    playback_link = song_to_find.get_playback()
+    
+    if playback_link != "null" or playback_link != "None":
+        audio_message = f"""
+        <audio src='{song_to_find.get_playback()}' controls loop preload = 'metadata'>
         
-    return render_template("check.html", message1 = message1, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url)
+        </audio>
+        
+        """    
+    
+        
+    return render_template("check.html", message1 = message1, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url, audio=audio_message)
     
 
 if __name__ == "__main__":

@@ -29,13 +29,20 @@ def get_auth_header_cc():
     # We will be sending a Post request 
         
     result = requests.post(url=url, headers=header, data=form)
-    json_result =  json.loads(result.content)
     
-    token = json_result["access_token"]
+    if result.status_code == 200:
+        json_result =  json.loads(result.content)
+        token = json_result["access_token"]
+        
+        return {
+            "Authorization" : "Bearer " + token
+        }
+        
+    else:
+        print("Error with headers")
+        return "Invalid"
     
-    return {
-        "Authorization" : "Bearer " + token
-    }
+    
     
 class Song:
     def __init__(self, query_word):
@@ -77,19 +84,23 @@ class Song:
         query = f"?q={updated_song}&type=track&market=US&limit=1&offset=0"
         
         query_url = url + query
+        
+        if type(headers) != str:
+            result = requests.get(url=query_url, headers=headers)
             
-        result = requests.get(url=query_url, headers=headers)
-        
-        json_result = json.loads(result.content)
-        
-        try:
-            track_item_json = json_result["tracks"]["items"][0]
+            json_result = json.loads(result.content)
             
-        except (KeyError, IndexError):
-            track_item_json = json_result
+            try:
+                track_item_json = json_result["tracks"]["items"][0]
+                
+            except (KeyError, IndexError):
+                track_item_json = json_result
+            
+            return track_item_json
         
-        return track_item_json
-    
+        else:
+            return {404: "Error"}
+        
     def get_artists(self):
         artists = []
         try:
@@ -99,10 +110,7 @@ class Song:
                         artists.append(c)
                         continue
                     
-            if len(artists) == 1:
-                return artists[0]
-            else:
-                return artists
+            return artists
             
         except (KeyError, IndexError):
             return "Himesh R"
@@ -129,6 +137,16 @@ class Song:
                 song_url = "https://youtu.be/dQw4w9WgXcQ?si=IGFC0ZxLDrACyJxg"
         
         return song_url
+    
+    def get_playback(self):
+        
+        try:
+            playback_url = self.track_item["preview_url"]
+        except KeyError:
+            playback_url = "null"
+            
+        return playback_url
+            
             
         
 
@@ -147,12 +165,18 @@ class Playlist:
                 
         query_url = url + query
         
-        result = requests.get(url=query_url, headers=headers)
+        if type(headers) != str:
 
-        json_result = json.loads(result.content)
+            result = requests.get(url=query_url, headers=headers)
+
+            json_result = json.loads(result.content)
+            
+            return json_result
         
-        return json_result
-    
+        else:
+            
+            return {404 : "Another error"}
+        
     def get_playlist_name(self):
         try:
             return self.playlist_json["name"]
