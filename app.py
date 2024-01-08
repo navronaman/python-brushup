@@ -1,14 +1,27 @@
 # This is the Flask app
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, redirect
 from functions import what_playlist_what_song, create_monthly_array
 from backend import Song
 import secrets
 import requests
+from dotenv import load_dotenv
+import os
+import urllib.parse
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
 MONTHLY_PLAYLISTS = create_monthly_array()
+
+load_dotenv()
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+REDIRECT_URL = "http://localhost:5000/callback"
+
+AUTH_URL = "https://accounts.spotify.com/authorize"
+TOKEN_URL = "https://accounts.spotify.com/api/token"
+
 
 @app.route("/")
 def index():
@@ -61,7 +74,21 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
 @app.route('/login')
 def login():
     
-    pass
+    scope = "ugc-image-upload playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
+    
+    # remove show_dialog during execution
+    params = {
+        'client_id' : CLIENT_ID,
+        'response_type' : 'code',
+        'scope' : scope,
+        'redirect_uri' : REDIRECT_URL,
+        'show_dialog' : True
+    }
+    
+    auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
+    
+    return redirect(auth_url)
+
 
 if __name__ == "__main__":
     app.run(host="120.0.0.1", port=0000, debug=True)

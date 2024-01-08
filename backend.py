@@ -10,6 +10,11 @@ load_dotenv()
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+REDIRECT_URL = "http://localhost:5000/callback"
+
+AUTH_URL = "https://accounts.spotify.com/authorize"
+TOKEN_URL = "https://accounts.spotify.com/api/token"
+
 
 def get_auth_header_cc():
     auth_string = CLIENT_ID + ":" + CLIENT_SECRET
