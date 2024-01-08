@@ -1,8 +1,9 @@
 # This is the Flask app
 from flask import Flask, render_template, request, flash
-from monthy_playlists import what_playlist_what_song, create_monthly_array
-from findplaylist import Song
+from functions import what_playlist_what_song, create_monthly_array
+from backend import Song
 import secrets
+import requests
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -57,6 +58,10 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
         
     return render_template("check.html", message1 = message1, message_new = message_new, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url, audio=audio_message)
     
+@app.route('/login')
+def login():
+    
+    pass
 
 if __name__ == "__main__":
     app.run(host="120.0.0.1", port=0000, debug=True)
