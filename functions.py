@@ -7,16 +7,9 @@ DF = pd.read_csv("monthly_playlists.csv")
 
 def create_monthly_array(df=DF):
     
-    spotify_ids = []
-    spotify_playlists = []
-
-    for id in df["ID"]:
-        parts = id.split(":")
-        spotify_ids.append(parts[-1])
-        playlist_i = Playlist(playlist_id=parts[-1])
-        spotify_playlists.append(playlist_i)
+    # We make an array of Playlist objects using the database spotify IDs
         
-    return spotify_playlists
+    return [Playlist(playlist_id=x.split(":")[-1]) for x in df["ID"]]
         
 SPOTIFY_PLAYLISTS = create_monthly_array()
     

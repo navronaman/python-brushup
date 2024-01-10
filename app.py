@@ -43,47 +43,62 @@ def index():
 
 @app.route("/check", methods=["POST", "GET"])
 def check(monthly_playlists = MONTHLY_PLAYLISTS):
-    song_name = str(request.form["song_input"])
-    song_to_find = Song(song_name)
     
-    song_name = song_to_find.get_name()
-    song_artists_list = song_to_find.get_artists()
-    song_artists = ""
+    if request.method == "POST":
     
-    if len(song_artists_list) == 1:
-        song_artists = song_artists_list[0]
+        song_name = str(request.form["song_input"])
+        song_to_find = Song(song_name)
+        
+        song_name = song_to_find.get_name()
+        song_artists_list = song_to_find.get_artists()
+        song_artists = ""
+        
+        if len(song_artists_list) == 1:
+            song_artists = song_artists_list[0]
+        else:
+            for index, artist in enumerate(song_artists_list):
+                song_artists += artist
+                if index < len(song_artists_list) - 1:
+                    song_artists += ", "
+        
+        song_image_url = song_to_find.get_image_url()
+        song_link_url = song_to_find.get_song_url()
+        
+        message1 = f"""
+        Song Name: {song_name}
+        """
+        message_new = f"""
+        \n Song Artists: {song_artists}
+        """
+            
+        song_check, play_url = what_playlist_what_song(song_to_find)
+        
+        audio_message = ""
+        playback_link = song_to_find.get_playback()
+        
+        if playback_link != None:
+            audio_message = f"""
+            <audio src='{song_to_find.get_playback()}' controls loop preload = 'metadata'>
+            
+            </audio>
+            
+            """    
+        
+            
+        return render_template(
+                "check.html",
+                message1 = message1,
+                message_new = message_new,
+                naval = song_check,
+                song_image_url=song_image_url,
+                song_link_url=song_link_url,
+                play_url=play_url,
+                audio=audio_message
+            )
+    
     else:
-        for index, artist in enumerate(song_artists_list):
-            song_artists += artist
-            if index < len(song_artists_list) - 1:
-                song_artists += ", "
-    
-    song_image_url = song_to_find.get_image_url()
-    song_link_url = song_to_find.get_song_url()
-    
-    message1 = f"""
-    Song Name: {song_name}
-    """
-    message_new = f"""
-    \n Song Artists: {song_artists}
-    """
+        return render_template("index.html")
         
-    song_check, play_url = what_playlist_what_song(song_to_find)
-    
-    audio_message = ""
-    playback_link = song_to_find.get_playback()
-    
-    if playback_link != None:
-        audio_message = f"""
-        <audio src='{song_to_find.get_playback()}' controls loop preload = 'metadata'>
-        
-        </audio>
-        
-        """    
-    
-        
-    return render_template("check.html", message1 = message1, message_new = message_new, naval = song_check, song_image_url=song_image_url, song_link_url=song_link_url, play_url=play_url, audio=audio_message)
-    
 @app.route('/login')
 def login():
     
@@ -143,7 +158,9 @@ def get_playlists():
         result = requests.get(url="https://api.spotify.com/v1/me/playlists", headers=headers)
         playlists = json.loads(result.content)
         
-        return jsonify(playlists)
+        #return jsonify(playlists)
+        
+        return render_template("homepage.html")
     
     else:
         return jsonify({"HELLO" : "I NEED HELP"})

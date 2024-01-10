@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Spotify App </title>
+        <link rel="stylesheet" href = "{{
+            url_for('static', filename='css/main.css')
+        }}">
+    </head>
+    <body>
+        <p>
+            Here's your playlist wrapped for {{playlist_name}}
+            Refresh for a new playlist
+        </p>
+        <br>
+        <form action = "check" method = "post">
+            <input type = "text" name = "song_input">
+            <br>
+            <input type = "submit" value = "CHECK" id = "check">
+        </form>
+        <br>
+        <p>
+            <a href = "/login">
+                Login With Spotify
+            </a>
+        </p>
+    </body>
+</html>
