@@ -314,6 +314,19 @@ class Playlist:
                         break
                     
         return b
+    
+    def popularity(self):
+        
+        try:
+            for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+                for k, c in self.playlist_json["tracks"]["items"][index]["track"]:
+                    if k == "track":
+                        for album_key, album_v in self.playlist_json["tracks"]["items"][index][k]:
+                            if album_key == "name" and album_v != "":
+                                continue
+            
+        except (KeyError, IndexError):
+            return ("Hello", "Hello", "Hello")
                 
     
                     
