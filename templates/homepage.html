@@ -9,20 +9,32 @@
     </head>
     <body>
         <p>
-            Here's your playlist wrapped for {{playlist_name}}
-            Refresh for a new playlist
-        </p>
-        <br>
-        <form action = "check" method = "post">
-            <input type = "text" name = "song_input">
-            <br>
-            <input type = "submit" value = "CHECK" id = "check">
-        </form>
-        <br>
-        <p>
-            <a href = "/login">
-                Login With Spotify
+            <a href = "{{playlist_link}}" target = "_blank">
+                {{playlist_name}}
             </a>
+            User: {{user_name}}
+
+            <br>
+            {{image_code|safe}}
+
+            Most Featured Artist: {{artist_name}} {{n1}}
+            Most Featured Album: {{album_name}} {{n1}}
+
+            <br>
+
+            Average Popularity: {{avg_pop}}
+            Most Popular Song: {{most_pop}} {{n3}}
+            Least Popular Song: {{least_pop}} {{n4}}
+
+            <br>
+
+            Average Duration: {{avg_du}}
+            Longest Song: {{most_du}}
+            Shortest Song: {{least_du}}
+
+
         </p>
+        <br>
+        
     </body>
 </html>
