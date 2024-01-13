@@ -1,7 +1,7 @@
 # This is the Flask app
 
 # From the backend files
-from functions import what_playlist_what_song, create_monthly_array 
+from functions import what_playlist_what_song, create_monthly_array, random_playlist_obj
 from backend import Song 
 
 # Imports from flask
@@ -158,9 +158,13 @@ def get_playlists():
         result = requests.get(url="https://api.spotify.com/v1/me/playlists", headers=headers)
         playlists = json.loads(result.content)
         
+        random_playlist = random_playlist_obj(playlists)
+        
+        return random_playlist.get_playlist_name
+        
         #return jsonify(playlists)
         
-        return render_template("homepage.html")
+        #return render_template("homepage.html")
     
     else:
         return jsonify({"HELLO" : "I NEED HELP"})

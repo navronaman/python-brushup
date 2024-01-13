@@ -1,6 +1,7 @@
 import time
 start_time = time.time()
 import pandas as pd
+import random
 from backend import Playlist, Song
 
 DF = pd.read_csv("monthly_playlists.csv")
@@ -36,6 +37,20 @@ def what_playlist_what_song(song_to_find, spotify_playlists=SPOTIFY_PLAYLISTS):
         url = f"{song_to_find.get_song_url()}"
             
     return word, url
+    
+def random_playlist_obj(json_file):
+    
+    try:
+        random_index = random.randint(0, len(json_file["items"]))
+        
+        playlist_return = Playlist(playlist_id=json_file["items"][random_index]["uri"].split(":")[-1])
+        
+    except (KeyError, IndexError):
+        
+        playlist_return = Playlist(playlist_id="6KcNAloaQxPh8LELKrnNHV")
+        
+    return playlist_return
+    
     
 
 if __name__ == "__main__":
