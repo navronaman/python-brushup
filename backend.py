@@ -47,6 +47,13 @@ def get_auth_header_cc():
         print("Error with headers")
         return "Invalid"
     
+def convert_ms_into_time(ms):
+    total_seconds = ms/1000
+    
+    minutes = int(total_seconds // 60)
+    seconds = int(total_seconds % 60)
+    
+    return f"{minutes:02d} : {seconds:02d}"
     
     
 class Song:
@@ -314,12 +321,49 @@ class Playlist:
             
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track":
+                    if k == "track" and c["duration_ms"] != 0:
                         track_pop[c["name"]] = c["popularity"]
                         
+            total_pop = sum(track_pop.values())
+            avg_pop = total_pop / len(track_pop)
+                        
+            max_pop = max(track_pop, key=track_pop.get)
+            max_pop_val = track_pop[max_pop]
             
-        except (KeyError, IndexError):
-            return ("Hello", "Hello", "Hello")
+            min_pop = min(track_pop, key=track_pop.get)
+            min_pop_val = track_pop[min_pop]
+            
+            return avg_pop, max_pop, max_pop_val, min_pop, min_pop_val
+                       
+                        
+            
+        except (KeyError, IndexError, AttributeError):
+            return (50.50, "Kho Gayein Hum Kahan", 999, "Har Gham Se Hum Azaad", -999)
+        
+    def duration(self):
+        
+        try:
+            
+            duration = {}
+            
+            for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
+                for k, c in track_dict.items():
+                    if k == "track" and c["duration_ms"] != 0:
+                        duration[c["name"]] = c["duration_ms"]
+                        
+            total_du = sum(duration.values())
+            avg_du = total_du / len(duration)
+            
+            max_du = max(duration, key=duration.get)
+            max_du_val = duration[max_du]
+            
+            min_du = min(duration, key=duration.get)
+            min_du_val = duration[min_du]
+            
+            return convert_ms_into_time(avg_du), max_du, convert_ms_into_time(max_du_val), min_du, convert_ms_into_time(min_du_val)
+        
+        except (KeyError, IndexError, AttributeError):
+            return (500, "Kho Gayein Hum Kahan", 1000, "Har Ghum Se Hum Azad", 0)
                 
     
                     
@@ -357,6 +401,10 @@ if __name__ == "__main__":
     
     print("\n")
 
+    print(playlist1.popularity())
+    print(playlist1.duration())
+
+    print("\n")
     
     song1 = Song(query_word="my darkest hours girl i felt so alone")
     print(song1.get_name())
@@ -365,11 +413,20 @@ if __name__ == "__main__":
     
     print("\n")
     
-    playlist2 = Playlist(playlist_id="37i9dQZF1EVGJJ3r00UGAt")
+    playlist2 = Playlist(playlist_id="7c0iTcf9wlH6KHSbOG26Gb")
     playlist2.print_songs()
+    
+    print("\n")
+
     print(playlist2.get_playlist_name())
     print(playlist2.most_featured_artist())
     print(playlist2.most_featured_album())
+    
+    print("\n")
+
+    print(playlist2.popularity())
+    print(playlist2.duration())
+
 
 
 
