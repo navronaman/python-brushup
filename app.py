@@ -105,6 +105,8 @@ def check(monthly_playlists = MONTHLY_PLAYLISTS):
 @app.route('/login')
 def login():
     
+    print("\n I'm at login.")
+    
     scope = "ugc-image-upload playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
     
     # remove show_dialog during execution
@@ -118,10 +120,15 @@ def login():
     
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
     
+    print(f"\n Here's the Auth URL: {auth_url}")
+    
     return redirect(auth_url)
 
 @app.route('/callback')
 def callback():
+    
+    print("\n I'm at callback")
+    
     if 'error' in request.args:
         return jsonify({"error": request.args['error']})
     
@@ -135,17 +142,29 @@ def callback():
             'client_secret' : CLIENT_SECRET            
         }
         
+        print(f"\n Here's the request body {req_body}")
+        
         response = requests.post(url=TOKEN_URL, data=req_body)
         token_info = response.json()
+        
+        print("\n Here's the JSON response for Token")
+        print(token_info)
         
         session["access_token"] = token_info["access_token"]
         session["refresh_token"] = token_info["refresh_token"]
         session["expires_at"] = datetime.now().timestamp() + token_info["expires_in"]
         
+        print(f"\n Here's the access token {session['access_token']}")
+        print(f"\n Here's the refresh token {session['refresh_token']}")
+        print(f"\n Here's the expires at {session['expires_at']}")
+        
         return redirect('/playlists')
     
 @app.route('/playlists')
 def get_playlists():
+    
+    print("\n I'm at playlists")
+    
     if 'access_token' not in session:
         return redirect('/login')
     
@@ -154,14 +173,32 @@ def get_playlists():
     
     if 'access_token' in session or datetime.now().timestamp() > session["expires_at"]:
         
+        print(f"\n AGAIN Here's the access token {session['access_token']}")
+        print(f"\n AGAIN Here's the refresh token {session['refresh_token']}")
+        print(f"\n AGAIN Here's the expires at {session['expires_at']}")
+        
         try:
     
             headers = {
                 'Authorization' : f"Bearer {session['access_token']}"
             }
             
+            print(f"\n Here's the headers {headers}")
+            
             result = requests.get(url=f"https://api.spotify.com/v1/me/playlists?limit=50&offset={random.randint(0, 100)}", headers=headers)
+            
+            print("\n Here's the response status code")
+            print(result.status_code)
+            
+            print("\n Here's the response content")
+            print(result.content)
+
+            
             playlists = result.json()
+            
+            
+            print("/n Here's the JSON file")
+            print(playlists)
             
             random_playlist = random_playlist_obj(playlists)
             
