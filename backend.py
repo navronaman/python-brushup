@@ -53,7 +53,7 @@ def convert_ms_into_time(ms):
     minutes = int(total_seconds // 60)
     seconds = int(total_seconds % 60)
     
-    return f"{minutes:02d} : {seconds:02d}"
+    return f"{minutes:02d} minutes : {seconds:02d} seconds"
     
     
 class Song:
@@ -195,7 +195,7 @@ class Playlist:
         except KeyError:
             return "Error"
     
-    def get_playlist_ownder(self):
+    def get_playlist_owner(self):
         try:
             return self.playlist_json["owner"]["display_name"]
         except KeyError:
@@ -321,11 +321,11 @@ class Playlist:
             
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track" and c["duration_ms"] != 0:
+                    if k == "track" and c["duration_ms"] != 0 and c["popularity"] != 0:
                         track_pop[c["name"]] = c["popularity"]
                         
             total_pop = sum(track_pop.values())
-            avg_pop = total_pop / len(track_pop)
+            avg_pop = round((total_pop / len(track_pop)), 2)
                         
             max_pop = max(track_pop, key=track_pop.get)
             max_pop_val = track_pop[max_pop]

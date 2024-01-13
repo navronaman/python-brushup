@@ -160,11 +160,38 @@ def get_playlists():
         
         random_playlist = random_playlist_obj(playlists)
         
-        return random_playlist.get_playlist_name()
+        name = random_playlist.get_playlist_name()
+        user = random_playlist.get_playlist_owner()
+        link = random_playlist.get_playlist_url()
         
-        #return jsonify(playlists)
+        artist_n, n1 = random_playlist.most_featured_artist()
+        album_n, n2 = random_playlist.most_featured_album()
         
-        #return render_template("homepage.html")
+        avg_pop, most_pop, n3, least_pop, n4 = random_playlist.popularity()
+        
+        avg_du, most_du, n5, least_du, n6 = random_playlist.duration()
+                
+        return render_template(
+            "randomplay.html",
+            playlist_name=name,
+            user_name=user,
+            playlist_link=link,
+            image_code="",
+            artist_name=artist_n,
+            n1=n1,
+            album_name=album_n,
+            n2=n2,
+            avg_pop=avg_pop,
+            most_pop=most_pop,
+            n3=n3,
+            least_pop=least_pop,
+            n4=n4,
+            avg_du=avg_du,
+            most_du=most_du,
+            n5=n5,
+            least_du=least_du,
+            n6=n6
+            )
     
     else:
         return jsonify({"HELLO" : "I NEED HELP"})
