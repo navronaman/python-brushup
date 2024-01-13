@@ -206,6 +206,13 @@ class Playlist:
             return self.playlist_json["external_urls"]["spotify"]
         except KeyError:
             return "Error"
+        
+    def get_playlist_image(self):
+        
+        try:
+            return self.playlist_json["images"][0]["url"]
+        except (KeyError, ValueError, IndexError, AttributeError):
+            return None
     
     def get_songs_array(self):
         
@@ -214,7 +221,7 @@ class Playlist:
         try:                
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track":
+                    if k == "track" and c!=None:
                         for i, j in c.items():
                             if i == "name":
                                 tmp.append(j)
@@ -231,7 +238,7 @@ class Playlist:
         try:               
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track":
+                    if k == "track" and c!=None:
                         for i, j in c.items():
                             if i == "id":
                                 tmp.append(j)
@@ -255,10 +262,10 @@ class Playlist:
         
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track":
+                    if k == "track" and c != None:
                         for ai, artist in enumerate(c["artists"]):
                             for artist_key, artist_value in artist.items():
-                                if artist_key == "name":
+                                if artist_key == "name" and artist_value!="":
                                     if artist_value in artist_counts:
                                         artist_counts[artist_value] += 1
                                     else:
@@ -282,7 +289,7 @@ class Playlist:
         
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track":
+                    if k == "track" and c!=None:
                         for album_key, album_v in c["album"].items():
                             if album_key == "name" and album_v != "":
                                 if album_v in album_counts:
@@ -306,7 +313,7 @@ class Playlist:
         
         for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
             for k, c in track_dict.items():
-                if k == "track":
+                if k == "track" and c!=None:
                     if c["id"] == id_to_check:
                         b = True
                         break
@@ -321,7 +328,7 @@ class Playlist:
             
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track" and c["duration_ms"] != 0 and c["popularity"] != 0:
+                    if k == "track" and c!=None and c["duration_ms"] != 0 and c["popularity"] != 0:
                         track_pop[c["name"]] = c["popularity"]
                         
             total_pop = sum(track_pop.values())
@@ -348,7 +355,7 @@ class Playlist:
             
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
                 for k, c in track_dict.items():
-                    if k == "track" and c["duration_ms"] != 0:
+                    if k == "track" and c!=None and c["duration_ms"] != 0:
                         duration[c["name"]] = c["duration_ms"]
                         
             total_du = sum(duration.values())

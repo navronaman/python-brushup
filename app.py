@@ -21,6 +21,9 @@ import json
 # For time
 from datetime import datetime
 
+# For random webpage
+import random
+
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
@@ -133,7 +136,7 @@ def callback():
         }
         
         response = requests.post(url=TOKEN_URL, data=req_body)
-        token_info = json.loads(response.content)
+        token_info = response.json()
         
         session["access_token"] = token_info["access_token"]
         session["refresh_token"] = token_info["refresh_token"]
@@ -150,49 +153,73 @@ def get_playlists():
         return redirect('/refresh-token')
     
     if 'access_token' in session or datetime.now().timestamp() > session["expires_at"]:
+        
+        try:
     
-        headers = {
-            'Authorization' : f"Bearer {session['access_token']}"
-        }
-        
-        result = requests.get(url="https://api.spotify.com/v1/me/playlists", headers=headers)
-        playlists = json.loads(result.content)
-        
-        random_playlist = random_playlist_obj(playlists)
-        
-        name = random_playlist.get_playlist_name()
-        user = random_playlist.get_playlist_owner()
-        link = random_playlist.get_playlist_url()
-        
-        artist_n, n1 = random_playlist.most_featured_artist()
-        album_n, n2 = random_playlist.most_featured_album()
-        
-        avg_pop, most_pop, n3, least_pop, n4 = random_playlist.popularity()
-        
-        avg_du, most_du, n5, least_du, n6 = random_playlist.duration()
+            headers = {
+                'Authorization' : f"Bearer {session['access_token']}"
+            }
+            
+            result = requests.get(url=f"https://api.spotify.com/v1/me/playlists?limit=50&offset={random.randint(0, 100)}", headers=headers)
+            playlists = result.json()
+            
+            random_playlist = random_playlist_obj(playlists)
+            
+            name = random_playlist.get_playlist_name()
+            user = random_playlist.get_playlist_owner()
+            link = random_playlist.get_playlist_url()
+            
+            artist_n, n1 = random_playlist.most_featured_artist()
+            album_n, n2 = random_playlist.most_featured_album()
+            
+            avg_pop, most_pop, n3, least_pop, n4 = random_playlist.popularity()
+            
+            avg_du, most_du, n5, least_du, n6 = random_playlist.duration()
+            
+            image_code = ""
+            if random_playlist.get_playlist_image():
+                image_code = f"""
+                <a href='{link}' target='_blank'>
+                    <img src = '{random_playlist.get_playlist_image()}' alt = 'Playlist Image'>
+                </a>
+                """
                 
-        return render_template(
-            "randomplay.html",
-            playlist_name=name,
-            user_name=user,
-            playlist_link=link,
-            image_code="",
-            artist_name=artist_n,
-            n1=n1,
-            album_name=album_n,
-            n2=n2,
-            avg_pop=avg_pop,
-            most_pop=most_pop,
-            n3=n3,
-            least_pop=least_pop,
-            n4=n4,
-            avg_du=avg_du,
-            most_du=most_du,
-            n5=n5,
-            least_du=least_du,
-            n6=n6
-            )
-    
+            if name == "Error":
+                
+                return redirect('/playlists')
+                
+                    
+            return render_template(
+                "randomplay.html",
+                playlist_name=name,
+                user_name=user,
+                playlist_link=link,
+                image_code=image_code,
+                artist_name=artist_n,
+                n1=n1,
+                album_name=album_n,
+                n2=n2,
+                avg_pop=avg_pop,
+                most_pop=most_pop,
+                n3=n3,
+                least_pop=least_pop,
+                n4=n4,
+                avg_du=avg_du,
+                most_du=most_du,
+                n5=n5,
+                least_du=least_du,
+                n6=n6
+                )
+            
+        except json.JSONDecodeError as e:
+            return jsonify({"error" : f"JSON decoding failed: {str(e)}"})
+        
+        except requests.exceptions.RequestException as e:
+            return jsonify({"error" : f"Request failed: {str(e)}"})
+        
+        except Exception as e:
+            return jsonify({"error" : f"An unexpected error occures: {str(e)}"})
+        
     else:
         return jsonify({"HELLO" : "I NEED HELP"})
         
@@ -218,10 +245,9 @@ def refresh_token():
         
         result = requests.post(url=AUTH_URL, headers=header, data=req_body)
         
-        new_token_info = json.loads(result.content)
+        new_token_info = result.json()
         
         session["access_token"] = new_token_info["access_token"]
-        session["refresh_token"] = new_token_info["refresh_token"]
         session["expires_at"] = datetime.now().timestamp() + new_token_info["expires_in"]
         
         return redirect('/playlist')
