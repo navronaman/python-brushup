@@ -206,12 +206,11 @@ class Playlist:
         
         try:                
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-                for k, c in self.playlist_json["tracks"]["items"][index].items():
+                for k, c in track_dict.items():
                     if k == "track":
-                        for i, j in self.playlist_json["tracks"]["items"][index][k].items():
+                        for i, j in c.items():
                             if i == "name":
                                 tmp.append(j)
-                                continue
                             
         except (KeyError, IndexError):
             tmp = ["Never Gonna Give You Up"]
@@ -224,12 +223,11 @@ class Playlist:
         
         try:               
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-                for k, c in self.playlist_json["tracks"]["items"][index].items():
+                for k, c in track_dict.items():
                     if k == "track":
-                        for i, j in self.playlist_json["tracks"]["items"][index][k].items():
+                        for i, j in c.items():
                             if i == "id":
                                 tmp.append(j)
-                                continue
                             
         except (KeyError, IndexError):
             tmp = ["Never Gonna Let You Down"]
@@ -244,28 +242,25 @@ class Playlist:
                         
     def most_featured_artist(self):
                 
-        tmp = []
+        artist_counts = {}
         
         try:
         
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-                for k, c in self.playlist_json["tracks"]["items"][index].items():
+                for k, c in track_dict.items():
                     if k == "track":
-                        for ai, artist in enumerate(self.playlist_json["tracks"]["items"][index][k]["artists"]):
-                            for i, j in self.playlist_json["tracks"]["items"][index][k]["artists"][ai].items():
-                                if i == "name":
-                                    tmp.append(j)
-                                    continue
+                        for ai, artist in enumerate(c["artists"]):
+                            for artist_key, artist_value in artist.items():
+                                if artist_key == "name":
+                                    if artist_value in artist_counts:
+                                        artist_counts[artist_value] += 1
+                                    else:
+                                        artist_counts[artist_value] = 1
+                            
                                 
-            mfartist = tmp[0]
-            max_occ = 0
-            
-            for artist in tmp:
-                occurences = tmp.count(artist)
-                if occurences > max_occ:
-                    max_occ = occurences
-                    mfartist = artist
-                    
+            mfartist = max(artist_counts, key=artist_counts.get)
+            max_occ = artist_counts[mfartist]
+                                
             return mfartist, max_occ
         
         except (KeyError, IndexError):
@@ -274,27 +269,23 @@ class Playlist:
         
     def most_featured_album(self):
         
-        tmp = []
+        album_counts = {}
         
         try:
         
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-                for k, c in self.playlist_json["tracks"]["items"][index].items():
+                for k, c in track_dict.items():
                     if k == "track":
-                        for album_key, album_v in self.playlist_json["tracks"]["items"][index][k]["album"].items():
+                        for album_key, album_v in c["album"].items():
                             if album_key == "name" and album_v != "":
-                                tmp.append(album_v)
-                                continue
-                                
-            mfalbum = tmp[0]
-            max_occ = 0
-            
-            for album in tmp:
-                occurences = tmp.count(album)
-                if occurences > max_occ:
-                    max_occ = occurences
-                    mfalbum = album
-                    
+                                if album_v in album_counts:
+                                    album_counts[album_v] += 1
+                                else:
+                                    album_counts[album_v] = 1
+                            
+            mfalbum = max(album_counts, key=album_counts.get)
+            max_occ = album_counts[mfalbum]
+                                    
             return mfalbum, max_occ
         
         except (KeyError, IndexError):
@@ -307,9 +298,9 @@ class Playlist:
         b = False
         
         for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-            for k, c in self.playlist_json["tracks"]["items"][index].items():
+            for k, c in track_dict.items():
                 if k == "track":
-                    if self.playlist_json["tracks"]["items"][index][k]["id"] == id_to_check:
+                    if c["id"] == id_to_check:
                         b = True
                         break
                     
@@ -318,12 +309,14 @@ class Playlist:
     def popularity(self):
         
         try:
+            
+            track_pop = {}
+            
             for index, track_dict in enumerate(self.playlist_json["tracks"]["items"]):
-                for k, c in self.playlist_json["tracks"]["items"][index]["track"]:
+                for k, c in track_dict.items():
                     if k == "track":
-                        for album_key, album_v in self.playlist_json["tracks"]["items"][index][k]:
-                            if album_key == "name" and album_v != "":
-                                continue
+                        track_pop[c["name"]] = c["popularity"]
+                        
             
         except (KeyError, IndexError):
             return ("Hello", "Hello", "Hello")
@@ -370,5 +363,13 @@ if __name__ == "__main__":
     print(song1.get_artists())
     print(song1.get_id())
     
+    print("\n")
+    
+    playlist2 = Playlist(playlist_id="37i9dQZF1EVGJJ3r00UGAt")
+    playlist2.print_songs()
+    print(playlist2.get_playlist_name())
+    print(playlist2.most_featured_artist())
+    print(playlist2.most_featured_album())
+
 
 

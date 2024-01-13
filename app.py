@@ -160,7 +160,7 @@ def get_playlists():
         
         random_playlist = random_playlist_obj(playlists)
         
-        return random_playlist.get_playlist_name
+        return random_playlist.get_playlist_name()
         
         #return jsonify(playlists)
         
