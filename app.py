@@ -185,17 +185,21 @@ def get_playlists():
             
             print(f"\n Here's the headers {headers}")
             
-            result = requests.get(url=f"https://api.spotify.com/v1/me/playlists?limit=50&offset={random.randint(0, 100)}", headers=headers)
+            max_range = 100
+            
+            result = requests.get(url=f"https://api.spotify.com/v1/me/playlists?limit=50&offset={random.randint(0, max_range)}", headers=headers)
             
             print("\n Here's the response status code")
             print(result.status_code)
             
             print("\n Here's the response content")
             print(result.content)
-
             
             playlists = result.json()
             
+            while len(playlists["items"]) == 0:
+                result = requests.get(url=f"https://api.spotify.com/v1/me/playlists?limit=50&offset={random.randint(0, max_range-25)}", headers=headers)
+                playlists = result.json()
             
             print("/n Here's the JSON file")
             print(playlists)
