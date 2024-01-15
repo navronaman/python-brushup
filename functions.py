@@ -95,8 +95,9 @@ def top_task1(top, search, time):
             tv2 = "long_term"
             
     url = f"https://api.spotify.com/v1/me/top/{sv}?time_range={tv2}&limit={tv1}"
+    msg = f"Here are your {top_var} {search_var} {time_var}"
     
-    return tv1, sv, tv2, url
+    return msg, url
         
             
     
@@ -112,6 +113,7 @@ def top_task2(json_file):
             
             for index, trackdict in enumerate(json_file["items"]):
                 main_d[index+1] = Song(f"{trackdict['name']} {trackdict['artists'][0]['name']}")
+                main_d[index+1] = [trackdict['name'], trackdict['album']['name']]
             
             text_r = """
             <table border="1">
@@ -126,8 +128,8 @@ def top_task2(json_file):
                 text_r += f"""
                 <tr>
                     <td>{index}</td>
-                    <td>{song_obj.get_name()}</td>
-                    <td>{song_obj.get_album_name()}</td>
+                    <td>{song_obj[0]}</td>
+                    <td>{song_obj[1]}</td>
                 </tr>
                 """
                 

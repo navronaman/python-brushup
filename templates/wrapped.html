@@ -49,11 +49,11 @@
                 <option value="1">Top 50</option>
             </select>
             <br>
+            <input type="submit" value="Submit" id="submitBtn">
         </form>
-       <br>
 
         <p>
-            Here are your {{top_var}} {{search_var}} {{time_var}}
+            {{message_top}}
 
             {{top_list|safe}}
         </p>

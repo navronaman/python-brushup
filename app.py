@@ -327,7 +327,7 @@ def wrapped():
                 
                 print(f"\n For the third time I'm the headers: {headers}")
                 
-                tv, sv, tv2, requrl = top_task1(top=top_var, search=search_type, time=time_var)
+                msg, requrl = top_task1(top=top_var, search=search_type, time=time_var)
                 
                 print(f"\nI'm the URL {requrl}")
                 
@@ -342,10 +342,8 @@ def wrapped():
                 html_text = top_task2(json_file)
                 
                 return render_template(
-                    "wrappedA.html",
-                    top_var=tv,
-                    search_var=sv,
-                    time_var=tv2,
+                    "wrapped.html",
+                    message_top=msg,                    
                     top_list=html_text
                 )
                 
