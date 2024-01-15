@@ -104,16 +104,10 @@ def top_task1(top, search, time):
 def top_task2(json_file):
     
     try:
-        
-        total_items = json_file["total"]
-        
+                
         if json_file["href"].split("/")[-1].startswith("tracks"):
             
-            main_d = {}
-            
-            for index, trackdict in enumerate(json_file["items"]):
-                main_d[index+1] = Song(f"{trackdict['name']} {trackdict['artists'][0]['name']}")
-                main_d[index+1] = [trackdict['name'], trackdict['album']['name']]
+            main_d = {index + 1: [trackdict['name'], trackdict['album']['name']] for index, trackdict in enumerate(json_file["items"])}
             
             text_r = """
             <table border="1">
@@ -142,11 +136,8 @@ def top_task2(json_file):
         
         else:
             
-            main_d = {}
+            main_d = {index+1 : artist['name'] for index, artist in enumerate(json_file["items"])}
             
-            for index, artist in enumerate(json_file["items"]):
-                main_d[index+1] = artist["name"]
-                
             text_r = """
             <table border="1">
                 <tr>
@@ -170,17 +161,9 @@ def top_task2(json_file):
                     
             return text_r
         
-            
+    except Exception as e:
         
-    except Exception:
-        
-        a = ""
-        return a
-    
-    
-    
-    
-    
+        return str(e)
     
 
 if __name__ == "__main__":
