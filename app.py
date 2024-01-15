@@ -1,7 +1,7 @@
 # This is the Flask app
 
 # From the backend files
-from functions import what_playlist_what_song, create_monthly_array, random_playlist_obj
+from functions import what_playlist_what_song, create_monthly_array, random_playlist_obj, top_task1, top_task2
 from backend import Song 
 
 # Imports from flask
@@ -293,6 +293,53 @@ def refresh_token():
         
         return redirect('/playlist')
     
+@app.route('/wrapped', methods=["POST", "GET"])
+def wrapped():
+
+    if 'access_token' not in session:
+        return redirect('/login')
+    
+    if datetime.now().timestamp() > session["expires_at"]:
+        return redirect('/refresh-token')
+    
+    if 'access_token' in session or datetime.now().timestamp() > session["expires_at"]:
+        
+        if 'top_var' not in session or 'search_type' not in session or 'time_var' not in session:
+            return render_template("wrapped.html")
+        
+        else:
+            if request.method == "POST":
+                
+                session['top_var'] = int(request.form['top_type'])
+                session['search_type'] = int(request.form['search_type'])
+                session['time_var'] = int(request.form['time_type'])
+                
+                try:
+                
+                    headers = {
+                                    'Authorization' : f"Bearer {session['access_token']}"
+                                }
+                    
+                    tv, sv, tv2, requrl = top_task1(headers=headers, top=session['top_variable'], search=session['search_type'])
+                    
+                    html_text = top_task2(headers=headers, top=session['top_variable'], search=session['search_type'])
+                    
+                    return render_template(
+                        "wrappedAfter.html",
+                        top_var,
+                        search_var,
+                        time_var,
+                        top_list=html_text
+                    )
+                    
+                except Exception as e:
+                    
+                    return jsonify({"error" : f"An unexpected error occured: {str(e)}"})
+                
+            else:
+                
+                return render_template("wrapped.html")
+            
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

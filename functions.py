@@ -55,6 +55,16 @@ def random_playlist_obj(json_file):
         playlist_return = Playlist(playlist_id=json_file["items"][0]["uri"].split(":")[-1])
         
     return playlist_return
+
+def top_task1(headers, top, search):
+    
+    match top:
+        case 0:
+            
+    
+def top_task2(headers, top,)
+    
+    
     
     
 
