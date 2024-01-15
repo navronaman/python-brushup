@@ -107,7 +107,7 @@ def login():
     
     print("\n I'm at login.")
     
-    scope = "ugc-image-upload playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
+    scope = "ugc-image-upload playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-top-read"
     
     # remove show_dialog during execution
     params = {
@@ -158,7 +158,7 @@ def callback():
         print(f"\n Here's the refresh token {session['refresh_token']}")
         print(f"\n Here's the expires at {session['expires_at']}")
         
-        return redirect('/playlists')
+        return redirect('/')
     
 @app.route('/playlists')
 def get_playlists():
@@ -293,6 +293,10 @@ def refresh_token():
         
         return redirect('/playlist')
     
+@app.route('/wrap')
+def wrapp():
+    return render_template("wrapp.html")
+            
 @app.route('/wrapped', methods=["POST", "GET"])
 def wrapped():
 
@@ -304,42 +308,56 @@ def wrapped():
     
     if 'access_token' in session or datetime.now().timestamp() > session["expires_at"]:
         
-        if 'top_var' not in session or 'search_type' not in session or 'time_var' not in session:
-            return render_template("wrapped.html")
-        
-        else:
-            if request.method == "POST":
-                
-                session['top_var'] = int(request.form['top_type'])
-                session['search_type'] = int(request.form['search_type'])
-                session['time_var'] = int(request.form['time_type'])
-                
-                try:
-                
-                    headers = {
-                                    'Authorization' : f"Bearer {session['access_token']}"
-                                }
-                    
-                    tv, sv, tv2, requrl = top_task1(headers=headers, top=session['top_variable'], search=session['search_type'])
-                    
-                    html_text = top_task2(headers=headers, top=session['top_variable'], search=session['search_type'])
-                    
-                    return render_template(
-                        "wrappedAfter.html",
-                        top_var,
-                        search_var,
-                        time_var,
-                        top_list=html_text
-                    )
-                    
-                except Exception as e:
-                    
-                    return jsonify({"error" : f"An unexpected error occured: {str(e)}"})
-                
-            else:
-                
-                return render_template("wrapped.html")
+        if request.method == "POST":
             
+            top_var = int(request.form['top_type'])
+            search_type = int(request.form['search_type'])
+            time_var = int(request.form['time_type'])
+            
+            print(f"\n I'm the top value: {top_var}")
+            print(f"\n I'm the search value: {search_type}")
+            print(f"\n I'm the time value: {time_var}")
+            
+            
+            try:
+            
+                headers = {
+                                'Authorization' : f"Bearer {session['access_token']}"
+                            }
+                
+                print(f"\n For the third time I'm the headers: {headers}")
+                
+                tv, sv, tv2, requrl = top_task1(top=top_var, search=search_type, time=time_var)
+                
+                print(f"\nI'm the URL {requrl}")
+                
+                result = requests.get(url=requrl, headers=headers)
+                
+                                
+                print(f"\nI'm the result content: \n {result.content}")
+                print(f"\nI'm the result status code: \n {result.status_code}")
+                
+                json_file = result.json()
+                
+                html_text = top_task2(json_file)
+                
+                return render_template(
+                    "wrappedA.html",
+                    top_var=tv,
+                    search_var=sv,
+                    time_var=tv2,
+                    top_list=html_text
+                )
+                
+                
+            except Exception as e:
+                
+                return jsonify({"error" : f"An unexpected error occured: {str(e)}"})
+            
+        else:
+            
+            return render_template("wrapped.html")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

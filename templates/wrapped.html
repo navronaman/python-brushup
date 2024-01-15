@@ -26,7 +26,7 @@
             What kind of wrapped would you like?
         </p>
         <br>
-        <form action = "wrappedAfter" method = "post">
+        <form action = "wrapped" method = "post">
             <label for="searchType">Select type: </label>
             <select id="searchType" name="search_type">
                 <option value="0">Tracks</option>
@@ -50,7 +50,13 @@
             </select>
             <br>
         </form>
-        <br>
+       <br>
+
+        <p>
+            Here are your {{top_var}} {{search_var}} {{time_var}}
+
+            {{top_list|safe}}
+        </p>
         
     </body>
 </html>

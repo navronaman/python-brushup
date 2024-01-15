@@ -56,13 +56,126 @@ def random_playlist_obj(json_file):
         
     return playlist_return
 
-def top_task1(headers, top, search):
+def top_task1(top, search, time):
     
     match top:
         case 0:
+            top_var = "Top 10"
+            tv1 = 10
+        case 1:
+            top_var = "Top 50"
+            tv1 = 50
+        case _:
+            top_var = "Top 10"
+            tv1 = 10
+            
+    match search:
+        case 0:
+            search_var = "tracks"
+            sv = "tracks"
+        case 1:
+            search_var = "artists"
+            sv = "artists"
+        case 2:
+            search_var = "genres"
+            sv = "artists" # needs work
+        case _:
+            search_var = "tracks"
+            sv = "tracks"
+            
+    match time:
+        case 0:
+            time_var = "in the last month"
+            tv2 = "short_term"
+        case 1:
+            time_var = "in the last 6 months"
+            tv2 = "medium_term"
+        case 2:
+            time_var = "in your lifetime"
+            tv2 = "long_term"
+            
+    url = f"https://api.spotify.com/v1/me/top/{sv}?time_range={tv2}&limit={tv1}"
+    
+    return tv1, sv, tv2, url
+        
             
     
-def top_task2(headers, top,)
+def top_task2(json_file):
+    
+    try:
+        
+        total_items = json_file["total"]
+        
+        if json_file["href"].split("/")[-1].startswith("tracks"):
+            
+            main_d = {}
+            
+            for index, trackdict in enumerate(json_file["items"]):
+                main_d[index+1] = Song(f"{trackdict['name']} {trackdict['artists'][0]['name']}")
+            
+            text_r = """
+            <table border="1">
+                <tr>
+                    <th>No.</th>
+                    <th>Song Name</th>
+                    <th>Album Name</th>
+                </tr>
+            """
+            
+            for index, song_obj in main_d.items():
+                text_r += f"""
+                <tr>
+                    <td>{index}</td>
+                    <td>{song_obj.get_name()}</td>
+                    <td>{song_obj.get_album_name()}</td>
+                </tr>
+                """
+                
+                if index == len(main_d):
+                    text_r += """
+                    </table>                                        
+                    """
+        
+            return text_r
+        
+        else:
+            
+            main_d = {}
+            
+            for index, artist in enumerate(json_file["items"]):
+                main_d[index+1] = artist["name"]
+                
+            text_r = """
+            <table border="1">
+                <tr>
+                    <th>No.</th>
+                    <th>Artist Name</th>
+                </tr>
+            """
+            
+            for index, art_obj in main_d.items():
+                text_r += f"""
+                <tr>
+                    <td>{index}</td>
+                    <td>{art_obj}</td>
+                </tr>
+                """
+                
+                if index == len(main_d):
+                    text_r += """
+                    </table>                                        
+                    """
+                    
+            return text_r
+        
+            
+        
+    except Exception:
+        
+        a = ""
+        return a
+    
+    
     
     
     
