@@ -125,7 +125,7 @@ class Song:
             return artists
             
         except (KeyError, IndexError):
-            return "Himesh R"
+            return ["Song not found"]
             
     def get_image_url(self):
         

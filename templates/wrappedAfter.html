@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Spotify App </title>
+        <link rel="stylesheet" href = "{{
+            url_for('static', filename='css/main.css')
+        }}">
+    </head>
+    <body>
+
+        <header class="header">
+
+            <nav class="nav-list">
+                <a href = "/">Home</a>
+                <a href = "/">Song Search</a>
+                <a href = "/login">Login</a>
+                <a href = "/wrapped">Wrapped</a>
+                <a href = "/playlists">Playlist Wrapped</a>
+                <a href = "/recommender">Recommender</a>
+                <a href = "/cover">Playlist Cover</a>
+            </nav>
+        </header>
+
+        <p>
+            What kind of wrapped would you like?
+        </p>
+        <br>
+        <form action = "wrappedAfter" method = "post">
+            <label for="searchType">Select type: </label>
+            <select id="searchType" name="search_type">
+                <option value="0">Tracks</option>
+                <option value="1">Artists</option>
+                <option value="2">Genres</option>
+
+            </select>
+            <br>
+            <label for="topType">Top</label>
+            <select id="topType" name="top_type">
+                <option value="0">Top 10</option>
+                <option value="1">Top 50</option>
+            </select>
+            <br>
+        </form>
+        <br>
+
+        <p>
+            Here are your {{top_variable}} {{search_variable}}
+
+            {{list|safe}}
+        </p>
+        
+    </body>
+</html>
