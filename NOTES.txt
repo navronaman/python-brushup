@@ -1,0 +1,7 @@
+1. Main Error with adding new users to the app:
+
+    They need to be added to the Dashboard as authorized users with their emails
+
+2. Not everyone has an offset of 100 available playlists
+
+    So it's important to change the offset as per the user

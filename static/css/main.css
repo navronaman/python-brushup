@@ -1,4 +1,6 @@
 body {
+    padding-top: 6rem;
+    min-height: 100vh;
     background-color: slategray;
     text-align: center;
 
@@ -14,6 +16,55 @@ p {
 h1 {
     font-family: sans-serif;
 }
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 2rem;
+    background: linear-gradient(to right, seagreen, deepskyblue);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+
+}
+
+.nav-list a {
+
+    font-size: 1.6rem;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    margin-left: 4rem;
+
+}
+
+/*NOT WORKING*/
+.nav-list a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: #fff;
+    transition: 0.3s;
+}
+
+.nav-list a:hover::before {
+    width: 100%;
+
+}
+
+.nav-list > * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+
 
 img {
     margin: 30px 0 30px 0;
