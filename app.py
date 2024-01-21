@@ -1,7 +1,12 @@
 # This is the Flask app
 
 # From the backend files
-from functions import what_playlist_what_song, create_monthly_array, random_playlist_obj, top_task1, top_task2
+from functions import (
+    what_playlist_what_song, 
+    create_monthly_array, 
+    random_playlist_obj, 
+    top_task1, 
+    top_task2)
 from backend import Song 
 
 # Imports from flask
