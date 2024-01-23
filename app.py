@@ -361,6 +361,18 @@ def wrapped():
             
             return render_template("wrapped.html")
 
+@app.route('/recommender', methods=["POST", "GET"])
+def recommender():
+    if 'access_token' not in session:
+        return redirect('/login')
+    
+    if datetime.now().timestamp() > session["expires_at"]:
+        return redirect('/refresh-token')
+    
+    if 'access_token' in session or datetime.now().timestamp() > session["expires_at"]:
+        pass
+        
+        
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
