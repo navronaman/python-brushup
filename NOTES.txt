@@ -5,3 +5,7 @@
 2. Not everyone has an offset of 100 available playlists
 
     So it's important to change the offset as per the user
+
+
+New feature
+    Add how much percentage of an album have you added in playlist
