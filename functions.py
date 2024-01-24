@@ -43,10 +43,8 @@ def random_playlist_obj(json_file):
     try:
         
         print("I'm at option 1")
-        
-        random_index = random.randint(0, len(json_file["items"]))
-        
-        playlist_return = Playlist(playlist_id=json_file["items"][random_index]["uri"].split(":")[-1])
+                
+        playlist_return = Playlist(playlist_id=json_file["items"][0]["uri"].split(":")[-1])
         
     except (KeyError, IndexError):
         
